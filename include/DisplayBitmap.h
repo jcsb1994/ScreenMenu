@@ -13,7 +13,7 @@
 //***********************************************************************************
 //
 // Description:
-//    This file manages a 2 dimensional bitmap object for UI screens.
+//    This file contains a structure for generating a 2 dimensional bitmap object.
 //
 //***********************************************************************************
 

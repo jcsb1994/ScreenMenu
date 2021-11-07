@@ -1,3 +1,28 @@
+//***********************************************************************************
+// Copyright 2021 jcsb1994
+// Written by jcsb1994
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//***********************************************************************************
+//
+// Description:
+//    This file contains a class for a widget object for embedded UI. 
+//    Widgets are the primary elements in a user interface (see Qt for example).
+//    User can interact with widgets when selected on a UI screen, to navigate
+//    within a menu, changes settings, etc.
+// Implementation:
+//    Implemented with Arduino.h, can be used with various TFT screens, can operate
+//    with the Adafruit_GFX library, TFT_eSPI, ...
+//
+//***********************************************************************************
+
 #ifndef DISPLAY_WIDGET_H
 #define DISPLAY_WIDGET_H
 

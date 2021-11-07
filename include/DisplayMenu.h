@@ -13,16 +13,11 @@
 //***********************************************************************************
 //
 // Description:
-//    This file contains a high level interface for a buzzer. It lets the
-//    user create melodies and feed them into the object without blocking operations.
-//    The instance steps every ISR. step delay is specified in the ctor.
-//    a melody is initialized with setMelody(). the tone will ring, when stepping
-//    is complete, melody is cleared
-//    https://github.com/espressif/arduino-esp32/issues/1720
+//    This file contains a high level interface for a user menu in embedded UI.
 //
 // Implementation:
-//    Implemented with Arduino.h and tone() to control note frequencies
-//    On the ESP32, reimplemented with the ledcWriteTone() function
+//    Implemented with Arduino.h, can be used with various TFT screens, can operate
+//    with the Adafruit_GFX library, TFT_eSPI, ...
 //
 //***********************************************************************************
 
@@ -39,50 +34,8 @@
 
 class DisplayMenu
 {
-private:
-
-  class _widgetPrinter {
-    private:
-      uint16_t _target = 0;
-      uint16_t _nbWidgets = 0;
-    public:
-      uint16_t getPrintTarget() { return _target; }
-
-  };
-  _widgetPrinter _wdgPrint;
-  // mapping widgets
-  uint16_t _cursorPos[X_Y_AXES_NB] = {0, 0};
-
-  uint16_t _mapDimensions[X_Y_AXES_NB] = {0, 0}; 
-
-  uint16_t _targetIdx;
-  bool _isChanged = false;
-
-  DisplayWidget *_menuWidgets; // pointer to array of widgets for current menu
-  bool _isEditingTarget;
-
-  // usage settings
-  bool _editsFromSides;
-
-  // printing widgets
-  // class widgetPrinter with curr target (private), nb of widgets, colors, gettarget which is enclosed, 
-  uint16_t _currWdgToPrint = 0;   // default printing target for fcts that take a widget as argument
-
-  int16_t _idleColor;
-  int16_t _targetColor;
-  int16_t _editingColor;
-  int16_t _backgroundColor;
-
-  void _moveCursor(uint8_t dim, int amount);
-  void _encloseCursor();
-  void _updateTarget();
-
-  // widget or void pointer checks widget type when selectTarget called
-
-  void _updateMapDimensions(int x_count, int y_count);
-
 public:
-  DisplayMenu(/* args */) {}
+  DisplayMenu() {}
   ~DisplayMenu() {}
 
   // printing
@@ -94,7 +47,7 @@ public:
   void stopEditingTarget() { _isEditingTarget = false; }
   bool isEditingTarget() { return _isEditingTarget; }
 
-  void flagChange() { _isChanged = true; }
+  void flagChange() {  = true; }
   bool isChanged();
 
   // need fct that calls a void ptr, check what type of widget, and either edits or activates it.
@@ -139,6 +92,48 @@ public:
   void moveRight(int amount = 1);
   void moveLeft (int amount = 1);
   void activateTarget();
+
+private:
+
+  class _widgetPrinter {
+    private:
+      uint16_t _target = 0;
+      uint16_t _nbWidgets = 0;
+    public:
+      uint16_t getPrintTarget() { return _target; }
+
+  };
+  _widgetPrinter _wdgPrint;
+  // mapping widgets
+  uint16_t _cursorPos[X_Y_AXES_NB] = {0, 0};
+
+  uint16_t _mapDimensions[X_Y_AXES_NB] = {0, 0}; 
+
+  uint16_t _targetIdx;
+  bool _isChanged = false;      // marks when something changed on the menu and it needs refresh
+
+  DisplayWidget *_menuWidgets;  // pointer to array of widgets for current menu
+  bool _isEditingTarget;
+
+  // usage settings
+  bool _editsFromSides;         // left and right buttons edit selected widget instead of up and down buttons
+
+  // printing widgets
+  // class widgetPrinter with curr target (private), nb of widgets, colors, gettarget which is enclosed, 
+  uint16_t _currWdgToPrint = 0;   // default printing target for fcts that take a widget as argument
+
+  int16_t _idleColor;
+  int16_t _targetColor;
+  int16_t _editingColor;
+  int16_t _backgroundColor;
+
+  void _moveCursor(uint8_t dim, int amount);
+  void _encloseCursor();
+  void _updateTarget();
+
+  // widget or void pointer checks widget type when selectTarget called
+
+  void _updateMapDimensions(int x_count, int y_count);
 };
 
 #endif
