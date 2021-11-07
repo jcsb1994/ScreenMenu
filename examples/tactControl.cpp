@@ -68,10 +68,9 @@ void setup() {
 }
 
 void loop() {
-
   // check if buttons were pressed
   if (enterButton.poll() == DFLT_TACT_SHORT_PRESS_CODE) { 
-    menu.activateTarget();
+    menu.interact();
   }
 
   if (nextButton.poll() == DFLT_TACT_SHORT_PRESS_CODE) {

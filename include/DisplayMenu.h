@@ -73,12 +73,12 @@ public:
   /***************************************************************************/
   /*!
       @brief Interact with the currently targeted widget on the menu screen. 
-      Toggle edit mode for editable widgets, or activate the effect of activated widgets.
+      Toggle edit mode for editable widgets, or activate the effect of activated
+      widgets.
       @param none
   */
   /***************************************************************************/
   void interact();
-
 
   bool isEditingTarget() { return _isEditingTarget; }
 

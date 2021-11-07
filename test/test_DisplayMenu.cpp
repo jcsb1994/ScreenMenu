@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <unity.h>
-#include "ScreenMenu.h"
+#include "DisplayMenu.h"
+#include "DisplayWidget.h"
 
 // void setUp(void) {
 // // set stuff up here
@@ -10,25 +11,41 @@
 // // clean stuff up here
 // }
 
-#define BUZZER_PIN 7
-#define STEP_PERIOD_MS 100
-Buzzer buzz = Buzzer(BUZZER_PIN, 0, STEP_PERIOD_MS);
+#define BUZZER_PIN      7
+#define STEP_PERIOD_MS  100
 
-Buzzer::Melody_t bootupMelody{
-    .nbNotes = 3,
-    .duration = {400, 400, 800},
-    .frequency = {D4_NOTE_FREQ, E4_NOTE_FREQ, G4_NOTE_FREQ}};
+#define HEX_COLOR_BLUE      0x001F
+#define HEX_COLOR_BLACK     0x0000 
+#define HEX_COLOR_WHITE     0xFFFF
+#define HEX_COLOR_GREEN     0x07E0
 
-void test_buzzer_has_melody(void)
-{
-    buzz.setMelody(&bootupMelody);
-    TEST_ASSERT_EQUAL(buzz.hasMelody, true);
+#define TARGET_TEXT_COLOR       HEX_COLOR_BLUE
+#define BACKGROUND_TEXT_COLOR   HEX_COLOR_BLACK      
+#define IDLE_TEXT_COLOR         HEX_COLOR_WHITE     
+#define EDIT_TEXT_COLOR         HEX_COLOR_GREEN     
+
+int widgetTestCounter;
+
+DisplayMenu menu;
+
+void resetCounter() {
+  widgetTestCounter
 }
 
-void test_led_state_high(void)
+DisplayWidget widgets[DANCE_MENU_WIDGET_NB] = {
+  DisplayWidget(&widgetTestCounter, 1, 20), //check to replace pointer with a void pointer, but needs to understand if is a fct ptr
+  DisplayWidget(widgetTestCounter)
+};
+
+void Test_menuBackgroundColor(void)
 {
-    digitalWrite(LED_BUILTIN, HIGH);
-    TEST_ASSERT_EQUAL(HIGH, digitalRead(LED_BUILTIN));
+    TEST_ASSERT_EQUAL(menu.getBackgroundColor(), HEX_COLOR_BLACK);
+}
+
+void Test_menuEditingWidget(void)
+{
+    TEST_ASSERT_EQUAL(menu.isEditingTarget(), true);
+    TEST_ASSERT_EQUAL(menu.getWidgetColor(), EDIT_TEXT_COLOR);
 }
 
 void test_led_state_low(void)
@@ -42,11 +59,20 @@ void setup()
     // NOTE!!! Wait for >2 secs
     // if board doesn't support software reset via Serial.DTR/RTS
     delay(2000);
-
+    
     UNITY_BEGIN(); // IMPORTANT LINE!
-    RUN_TEST(test_led_builtin_pin_number);
+    menu.setColors(IDLE_TEXT_COLOR, TARGET_TEXT_COLOR, EDIT_TEXT_COLOR, BACKGROUND_TEXT_COLOR);
+    RUN_TEST(Test_menuBackgroundColor);
 
-    pinMode(LED_BUILTIN, OUTPUT);
+    menu.interact();
+    RUN_TEST(Test_menuEditingWidget);
+
+    menu.moveUp();
+    RUN_TEST(Test_menuWidgetColor);
+
+    menu.interact();
+    menu.moveDown();
+    menu.interact();
 }
 
 uint8_t i = 0;
