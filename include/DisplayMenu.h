@@ -38,17 +38,75 @@ public:
   DisplayMenu() {}
   ~DisplayMenu() {}
 
-  // printing
+  /***************************************************************************/
+  /*!
+      @brief Move the cursor up in the UI screen
+      @param amount the amount of boxes (widgets) to move up
+  */
+  /***************************************************************************/
+  void moveUp   (int amount = 1);
+  
+  /***************************************************************************/
+  /*!
+      @brief Move the cursor down in the UI screen
+      @param amount the amount of boxes (widgets) to move down
+  */
+  /***************************************************************************/
+  void moveDown (int amount = 1);
+  
+  /***************************************************************************/
+  /*!
+      @brief Move the cursor right in the UI screen
+      @param amount the amount of boxes (widgets) to move right
+  */
+  /***************************************************************************/
+  void moveRight(int amount = 1);
+  
+  /***************************************************************************/
+  /*!
+      @brief Move the cursor left in the UI screen
+      @param amount the amount of boxes (widgets) to move left
+  */
+  /***************************************************************************/
+  void moveLeft (int amount = 1);
+
+  /***************************************************************************/
+  /*!
+      @brief Interact with the currently targeted widget on the menu screen. 
+      Toggle edit mode for editable widgets, or activate the effect of activated widgets.
+      @param none
+  */
+  /***************************************************************************/
+  void interact();
+
+
+  bool isEditingTarget() { return _isEditingTarget; }
+
+  /***************************************************************************/
+  /*!
+      @brief Set the flag that tell the menu object that something changed
+      and it needs to refresh display
+      @param none
+  */
+  /***************************************************************************/
+  void flagChange() { _isChanged = true; }
+  bool isChanged();
+
+  /***************************************************************************/
+  /*!
+      @brief Resets a counter that counts which widget we are currently printing
+      when printing a menu page. must call nextPrint() between each subsequent
+      @param none
+  */
+  /***************************************************************************/
   void startPrint() { _currWdgToPrint = 0; }
   void nextPrint() { if (_currWdgToPrint < getWidgetNb()) {_currWdgToPrint++; } } 
 
-  // navigation and widget editing
-  void startEditingTarget() { _isEditingTarget = true; }
-  void stopEditingTarget() { _isEditingTarget = false; }
-  bool isEditingTarget() { return _isEditingTarget; }
+  void setColors(uint16_t idleCol, uint16_t targetCol, uint16_t editingCol, uint16_t backgroundCol);
+  uint16_t getWidgetColor(int widgetIdx = -1);
+  uint16_t getBackgroundColor() {return _backgroundColor; }
 
-  void flagChange() {  = true; }
-  bool isChanged();
+  uint16_t getWidgetNb() { return (_mapDimensions[0] * _mapDimensions[1]); }
 
   // need fct that calls a void ptr, check what type of widget, and either edits or activates it.
   // pass an argument of which direction is pressed, could set custom codes for each, and call that
@@ -57,7 +115,7 @@ public:
  
   /***************************************************************************/
   /*!
-      @brief  Set the list of widgets associated with current menu page.
+      @brief Set the list of widgets associated with current menu page.
       @param wdgList Pointer to the array of widgets for current page
       @param yNbWdg number of widgets on the y axis for current page
       @param xNbWdg number of widgets on the x axis for current page
@@ -65,33 +123,14 @@ public:
   /***************************************************************************/
   void setDisplayedWidgets(DisplayWidget *wdgList, uint16_t yNbWdg, uint16_t xNbWdg = 1);
 
-  
-  void setColors(uint16_t idleCol, uint16_t targetCol, uint16_t editingCol, uint16_t backgroundCol);
-
-
-  uint16_t getWidgetColor(int widgetIdx = -1);
-  uint16_t getBackgroundColor() {return _backgroundColor; }
-
-  uint16_t getWidgetNb() { return (_mapDimensions[0] * _mapDimensions[1]); }
-
   /***************************************************************************/
   /*!
-      @brief  Set if user edits widgets values from side arrows rather than up
+      @brief Set if user edits widgets values from side arrows rather than up
         and down arrows
       @param sidesEdit triggers editing from side buttons if true.
   */
   /***************************************************************************/
-  void editFromSides(bool sidesEdit) { _editsFromSides = sidesEdit; }
-
-  //-------------------------------------
-  // Navigation functions
-  //-------------------------------------
-
-  void moveUp   (int amount = 1);
-  void moveDown (int amount = 1);
-  void moveRight(int amount = 1);
-  void moveLeft (int amount = 1);
-  void activateTarget();
+  void setEditFromSides(bool sidesEdit) { _editsFromSides = sidesEdit; }
 
 private:
 
@@ -130,6 +169,16 @@ private:
   void _moveCursor(uint8_t dim, int amount);
   void _encloseCursor();
   void _updateTarget();
+
+    /***************************************************************************/
+  /*!
+      @brief For editable widgets: Set the flag that tell the menu object 
+      that the currently targeted widget is selected for edit
+      @param none
+  */
+  /***************************************************************************/
+  void _startEditingTarget() { _isEditingTarget = true; }
+  void _stopEditingTarget() { _isEditingTarget = false; }
 
   // widget or void pointer checks widget type when selectTarget called
 
