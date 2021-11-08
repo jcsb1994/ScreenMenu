@@ -3,33 +3,24 @@
 #include "DisplayMenu.h"
 #include "DisplayWidget.h"
 
-// void setUp(void) {
-// // set stuff up here
-// }
-
-// void tearDown(void) {
-// // clean stuff up here
-// }
-
-#define BUZZER_PIN      7
-#define STEP_PERIOD_MS  100
-
+// MENU HEX COLORS
 #define HEX_COLOR_BLUE      0x001F
 #define HEX_COLOR_BLACK     0x0000 
 #define HEX_COLOR_WHITE     0xFFFF
 #define HEX_COLOR_GREEN     0x07E0
-
 #define TARGET_TEXT_COLOR       HEX_COLOR_BLUE
 #define BACKGROUND_TEXT_COLOR   HEX_COLOR_BLACK      
 #define IDLE_TEXT_COLOR         HEX_COLOR_WHITE     
-#define EDIT_TEXT_COLOR         HEX_COLOR_GREEN     
+#define EDIT_TEXT_COLOR         HEX_COLOR_GREEN
 
+#define COUNTER_WIDGET_IDX      0
+#define RESET_WIDGET_IDX        1
 int widgetTestCounter;
 
 DisplayMenu menu;
 
 void resetCounter() {
-  widgetTestCounter
+  widgetTestCounter = 0;
 }
 
 DisplayWidget widgets[DANCE_MENU_WIDGET_NB] = {
@@ -45,13 +36,19 @@ void Test_menuBackgroundColor(void)
 void Test_menuEditingWidget(void)
 {
     TEST_ASSERT_EQUAL(menu.isEditingTarget(), true);
-    TEST_ASSERT_EQUAL(menu.getWidgetColor(), EDIT_TEXT_COLOR);
+    TEST_ASSERT_EQUAL(menu.getPrintColor(), EDIT_TEXT_COLOR);
 }
 
-void test_led_state_low(void)
+/*! @brief Test that a var associated with a widget is edited. */
+void Test_menuVarEdit(void)
 {
-    digitalWrite(LED_BUILTIN, LOW);
-    TEST_ASSERT_EQUAL(LOW, digitalRead(LED_BUILTIN));
+    TEST_ASSERT_EQUAL(widgetTestCounter, 1);
+}
+
+/*! @brief Test that widget activation had its effect. */
+void Test_menuWdgActivation(void)
+{
+    TEST_ASSERT_EQUAL(widgetTestCounter, 0);
 }
 
 void setup()
@@ -68,28 +65,16 @@ void setup()
     RUN_TEST(Test_menuEditingWidget);
 
     menu.moveUp();
-    RUN_TEST(Test_menuWidgetColor);
+    RUN_TEST(Test_menuVarEdit);
 
     menu.interact();
     menu.moveDown();
     menu.interact();
-}
+    RUN_TEST(Test_menuWdgActivation);
 
-uint8_t i = 0;
-uint8_t max_blinks = 5;
+}
 
 void loop()
 {
-    if (i < max_blinks)
-    {
-        RUN_TEST(test_led_state_high);
-        delay(500);
-        RUN_TEST(test_led_state_low);
-        delay(500);
-        i++;
-    }
-    else if (i == max_blinks)
-    {
-        UNITY_END(); // stop unit testing
-    }
+    UNITY_END(); // stop unit testing
 }

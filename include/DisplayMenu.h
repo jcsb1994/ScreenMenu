@@ -100,13 +100,23 @@ public:
   */
   /***************************************************************************/
   void startPrint() { _currWdgToPrint = 0; }
-  void nextPrint() { if (_currWdgToPrint < getWidgetNb()) {_currWdgToPrint++; } } 
+  void nextPrint() { if (_currWdgToPrint < getWidgetNb()) {_currWdgToPrint++; } }
+  
+  /***************************************************************************/
+  /*!
+      @brief Get the 16 bit hex color code associated with the current widget to print.
+      @param none
+  */
+  /***************************************************************************/
+  uint16_t getPrintColor();
 
   void setColors(uint16_t idleCol, uint16_t targetCol, uint16_t editingCol, uint16_t backgroundCol);
-  uint16_t getWidgetColor(int widgetIdx = -1);
+  uint16_t getTargetWidgetColor();
+  uint16_t getWidgetColor(uint16_t widgetIdx);
   uint16_t getBackgroundColor() {return _backgroundColor; }
 
   uint16_t getWidgetNb() { return (_mapDimensions[0] * _mapDimensions[1]); }
+  uint16_t getTargetWidgetIdx() { return _targetIdx; }
 
   // need fct that calls a void ptr, check what type of widget, and either edits or activates it.
   // pass an argument of which direction is pressed, could set custom codes for each, and call that
@@ -151,7 +161,7 @@ private:
   uint16_t _targetIdx;
   bool _isChanged = false;      // marks when something changed on the menu and it needs refresh
 
-  DisplayWidget *_menuWidgets;  // pointer to array of widgets for current menu
+  DisplayWidget *_menuWidgets = NULL;  // pointer to array of widgets for current menu
   bool _isEditingTarget;
 
   // usage settings

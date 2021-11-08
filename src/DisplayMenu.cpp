@@ -39,7 +39,7 @@ void DisplayMenu::_updateMapDimensions(int x_count, int y_count) {
     _targetIdx = 0;
     _cursorPos[X_COORD_INDEX] = 0;
     _cursorPos[Y_COORD_INDEX] = 0;
-    stopEditingTarget(); // leave editing mode, safeguard code
+    _stopEditingTarget(); // leave editing mode, safeguard code
 
     // reset printing
     _currWdgToPrint = 0; 
@@ -50,25 +50,25 @@ void DisplayMenu::_updateMapDimensions(int x_count, int y_count) {
 //#######################################################################
 
 
-  bool DisplayMenu::isChanged()
+bool DisplayMenu::isChanged()
+{
+  if (_isChanged)
   {
-    if (_isChanged)
-    {
-      _isChanged = false;
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    _isChanged = false;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+uint16_t DisplayMenu::getWidgetColor(uint16_t widgetIdx) {
+  if (widgetIdx >= getWidgetNb()) {
+    return 0;
   }
 
-uint16_t DisplayMenu::getWidgetColor(int widgetIdx /* = -1  */) {
-  if (widgetIdx < 0)
-  {
-    widgetIdx = _currWdgToPrint;
-  }
-  
   if(_targetIdx == widgetIdx) {
     if (_isEditingTarget)
     {
@@ -78,6 +78,16 @@ uint16_t DisplayMenu::getWidgetColor(int widgetIdx /* = -1  */) {
     }
   }
   return _idleColor;
+}
+
+uint16_t DisplayMenu::getPrintColor() 
+{
+  return getWidgetColor(_currWdgToPrint);
+}
+
+uint16_t DisplayMenu::getTargetWidgetColor() 
+{
+  return getWidgetColor(_targetIdx);
 }
 
 void DisplayMenu::setDisplayedWidgets(DisplayWidget *wdgList, uint16_t yNbWdg, uint16_t xNbWdg)
@@ -152,15 +162,18 @@ void DisplayMenu::moveRight(int amount /* = 1 */)
   }
 }
 
-void DisplayMenu::activateTarget()
+void DisplayMenu::interact()
 {
+  if (_menuWidgets == NULL)
+    return;
+
   _isChanged = true;
   if (_menuWidgets[_targetIdx].is_editable())
   {
     if(!_isEditingTarget) {
-      startEditingTarget();
+      _startEditingTarget();
     } else {
-      stopEditingTarget();
+      _stopEditingTarget();
     }
   }
   else
