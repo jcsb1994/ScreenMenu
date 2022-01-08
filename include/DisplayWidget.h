@@ -32,12 +32,15 @@ class DisplayWidget
 {
 private:
   // widgets that store a changeable value
-  int *const _value;
+  // int *const _value;
+  void *const _value; //  You can not store a function pointer in a void * pointer. This causes UB.
+
   unsigned int _incrementSize;
   int _valueCeiling;
   int _valueFloor;
 
   // widgets that trigger an action
+  
   bool _isEditable = 0;
   int _activationParam = 0;
   void (*_activationFct)() = NULL;
@@ -77,7 +80,7 @@ public:
     @param  incrementAmount Numeric amount by which the displayed value is changed when edited
   */
   /**********************************************************************/
-  DisplayWidget(int *displayedValue, unsigned int incrementAmount = 1, int valueCeiling = 100, int valueFloor = 0)
+  DisplayWidget(void *displayedValue, unsigned int incrementAmount, int valueCeiling, int valueFloor)
       : _value(displayedValue), _incrementSize(incrementAmount),
         _valueCeiling(valueCeiling), _valueFloor(valueFloor)
   {
@@ -97,15 +100,15 @@ public:
   }
   void increment()
   {
-    *_value += _incrementSize;
-    if (*_value > _valueCeiling)
-      *_value = _valueFloor;
+    *(int*)_value += _incrementSize;
+    if (*(int*)_value > _valueCeiling)
+      *(int*)_value = _valueFloor;
   }
   void decrement()
   {
-    *_value -= _incrementSize;
-    if (*_value < _valueFloor)
-      *_value = _valueCeiling;
+    *(int*)_value -= _incrementSize;
+    if (*(int*)_value < _valueFloor)
+      *(int*)_value = _valueCeiling;
   }
 };
 

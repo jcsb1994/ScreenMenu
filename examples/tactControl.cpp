@@ -38,7 +38,7 @@ DisplayWidget danceMenuWidgets[DANCE_MENU_WIDGET_NB] = {
 // menu printing function
 void printDancingPage() {
   menu.startPrint();
-  tft.setTextColor(menu.getWidgetColor(), menu.getBackgroundColor());
+  tft.setTextColor(menu.getPrintColor(), menu.getBackgroundColor());
 
   tft.setCursor(0, 50);
   tft.print("Dancers: ");
@@ -46,7 +46,7 @@ void printDancingPage() {
   tft.println("  "); // fills smaller numbers
 
   menu.nextPrint();
-  tft.setTextColor(menu.getWidgetColor(), menu.getBackgroundColor());
+  tft.setTextColor(menu.getPrintColor(), menu.getBackgroundColor());
 
   tft.println("Dance!");
 }

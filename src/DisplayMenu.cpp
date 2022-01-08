@@ -49,7 +49,6 @@ void DisplayMenu::_updateMapDimensions(int x_count, int y_count) {
 // Public functions
 //#######################################################################
 
-
 bool DisplayMenu::isChanged()
 {
   if (_isChanged)
@@ -62,7 +61,6 @@ bool DisplayMenu::isChanged()
     return false;
   }
 }
-
 
 uint16_t DisplayMenu::getWidgetColor(uint16_t widgetIdx) {
   if (widgetIdx >= getWidgetNb()) {
@@ -109,9 +107,10 @@ void DisplayMenu::setColors(uint16_t idleCol, uint16_t targetCol, uint16_t editi
 // Navigation functions
 //-------------------------------------
 
-
 void DisplayMenu::moveUp(int amount /* = 1 */)
 {
+    if (_menuWidgets == NULL)
+    return;
   _isChanged = true;
   if (_isEditingTarget && !_editsFromSides)
   {
@@ -125,6 +124,8 @@ void DisplayMenu::moveUp(int amount /* = 1 */)
 
 void DisplayMenu::moveDown(int amount /* = 1 */)
 {
+    if (_menuWidgets == NULL)
+    return;
   _isChanged = true;
   if (_isEditingTarget && !_editsFromSides)
   {
@@ -138,6 +139,8 @@ void DisplayMenu::moveDown(int amount /* = 1 */)
 
 void DisplayMenu::moveLeft(int amount /* = 1 */)
 {
+    if (_menuWidgets == NULL)
+    return;
   _isChanged = true;
   if (_isEditingTarget && _editsFromSides)
   {
@@ -151,6 +154,8 @@ void DisplayMenu::moveLeft(int amount /* = 1 */)
 
 void DisplayMenu::moveRight(int amount /* = 1 */)
 {
+    if (_menuWidgets == NULL)
+    return;
   _isChanged = true;
   if (_isEditingTarget && _editsFromSides)
   {

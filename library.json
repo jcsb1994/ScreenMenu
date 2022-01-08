@@ -1,12 +1,12 @@
 {
-    "name": "Dispay  Menu",
+    "name": "Screen  Menu",
     "version": "1.0.0",
     "description": "Operates menu navigation between objects displayed on a screen",
     "keywords": "buffer",
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/jcsb1994/ArrayCircularBuffer.git"
+      "url": "https://github.com/jcsb1994/ScreenMenu.git"
     },
     "authors":
     [
