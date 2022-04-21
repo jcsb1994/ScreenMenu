@@ -1,15 +1,37 @@
-/*
-Demonstration of a battery logo that slowly reduces in percentage
-*/
+//***********************************************************************************
+// Copyright 2021 jcsb1994
+// Written by jcsb1994
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//***********************************************************************************
+//
+// Description:
+//    This file is used as an example for the DisplayBitmap class that is part of this library.
+//    This file contains a demonstration of a battery logo that slowly reduces in percentage
+//    This example uses a ST7789 TFT display with the TFT_eSPI, and the Arduino framework.
+//
+//***********************************************************************************
 
 #include <Arduino.h>
 #include "TFT_eSPI.h"
 
-#include "DisplayMenu.h"
+// This library
 #include "DisplayBitmap.h"
-#include "DisplayWidget.h"
 
 #define TFT_SIDE_PIXEL_MAX (240)
+#define MAX_BATTERY_PERCENTAGE (100)
+
+
+//############################################################
+// BITMAPS
+//############################################################
 
 #define BATT_JUICE_RECT_MAX_W 22
 #define BATT_JUICE_RECT_MAX_H 13
@@ -38,44 +60,54 @@ const unsigned char chargeBmp [] PROGMEM = {
 
 DisplayBitmap chargeLogo = DisplayBitmap(BATTERY_BMP_WIDTH, BATTERY_BMP_HEIGHT, chargeBmp);
 
+//############################################################
+
 TFT_eSPI tft;
 
 int8_t battPercentage = 100;
 bool charging = false;
 
+
+/***************************************************************************/
+/*!
+    @brief Prints the battery animation on screen with the current power level
+    @param none
+*/
+/***************************************************************************/
 void printBattery()
 {
 int rectW = (batteryLogo.width * battPercentage)/100;
 
-//clear battery area
+//clear battery area by covering it with a black rectangle
 tft.fillRect(TFT_SIDE_PIXEL_MAX - batteryLogo.width,
                0,
                batteryLogo.width,
                batteryLogo.height,
-               TFT_BLACK); // BATT_JUICE_RECT_H
+               TFT_BLACK);
 
   // draw battery
   tft.drawBitmap(TFT_SIDE_PIXEL_MAX - batteryLogo.width,
                  0,
-                 batteryLogo.bitmap, batteryLogo.width, batteryLogo.height, TFT_WHITE);
+                 batteryLogo.bitmap, batteryLogo.width,
+                 batteryLogo.height, TFT_WHITE);
 
-  // draw rectangle with variable size inside
+  // draw green rectangle with variable size inside the battery bitmap
   tft.fillRect(TFT_SIDE_PIXEL_MAX - batteryLogo.width,
                2,
                rectW,
                BATT_JUICE_RECT_MAX_H,
-               TFT_GREEN); // BATT_JUICE_RECT_H
+               TFT_GREEN);
 
-  // draw charging spark logo
+  // draw charging spark logo when battery level is increasing
   if(charging) {
     tft.drawBitmap(TFT_SIDE_PIXEL_MAX - chargeLogo.width,
                   0,
-                  chargeLogo.bitmap, chargeLogo.width, chargeLogo.height, TFT_WHITE);
+                  chargeLogo.bitmap, chargeLogo.width, 
+                  chargeLogo.height, TFT_WHITE);
   }
-  Serial.println("rect W:" + String(rectW));
+  Serial.println("Battery level green rectangle width:" + String(rectW));
 }
 
-// main
 void setup()
 {
   Serial.begin(9600);
@@ -90,8 +122,11 @@ void setup()
 
 void loop()
 {
-  Serial.println("%: " + String(battPercentage));
+  Serial.println("Battery %: " + String(battPercentage));
+
   printBattery();
+
+  // Change battery level
   if (!charging) {
     battPercentage--;
     if(!battPercentage)

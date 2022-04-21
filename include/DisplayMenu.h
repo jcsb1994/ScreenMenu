@@ -85,11 +85,19 @@ public:
   /***************************************************************************/
   /*!
       @brief Set the flag that tell the menu object that something changed
-      and it needs to refresh display
+      and it needs to refresh display (same flag is triggered with move functions)
       @param none
   */
   /***************************************************************************/
   void flagChange() { _isChanged = true; }
+
+  /***************************************************************************/
+  /*!
+      @brief Check if something changed (user input, data change, ...) and menu 
+      needs to reprint
+      @param none
+  */
+  /***************************************************************************/
   bool isChanged();
 
   /***************************************************************************/
@@ -150,8 +158,8 @@ private:
       uint16_t _nbWidgets = 0;
     public:
       uint16_t getPrintTarget() { return _target; }
-
   };
+  
   _widgetPrinter _wdgPrint;
   // mapping widgets
   uint16_t _cursorPos[X_Y_AXES_NB] = {0, 0};
@@ -183,20 +191,17 @@ private:
     /***************************************************************************/
   /*!
       @brief For editable widgets: Set the flag that tell the menu object 
-      that the currently targeted widget is selected for edit
+      that the currently targeted widget is selected for edit (will change color
+      and lock the user in this widget until _stopEditingTarget is called).
       @param none
   */
   /***************************************************************************/
   void _startEditingTarget() { _isEditingTarget = true; }
   void _stopEditingTarget() { _isEditingTarget = false; }
 
-  // widget or void pointer checks widget type when selectTarget called
+
 
   void _updateMapDimensions(int x_count, int y_count);
 };
 
 #endif
-//screen move calls displayMenu move and screen's own refreshPage
-// tact press -> ui cb -> screen moveLeft, ... -> displayMenu moveX
-
-//screen print checks displayMenu's maps
