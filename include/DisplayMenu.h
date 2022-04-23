@@ -117,6 +117,8 @@ public:
   */
   /***************************************************************************/
   uint16_t getPrintColor();
+  int getPrintX();
+  int getPrintY();
 
   void setColors(uint16_t idleCol, uint16_t targetCol, uint16_t editingCol, uint16_t backgroundCol);
   uint16_t getTargetWidgetColor();

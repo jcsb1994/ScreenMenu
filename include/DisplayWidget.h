@@ -30,21 +30,6 @@
 
 class DisplayWidget
 {
-private:
-  // widgets that store a changeable value
-  // int *const _value;
-  void *const _value; //  You can not store a function pointer in a void * pointer. This causes UB.
-
-  unsigned int _incrementSize;
-  int _valueCeiling;
-  int _valueFloor;
-
-  // widgets that trigger an action
-  
-  bool _isEditable = 0;
-  int _activationParam = 0;
-  void (*_activationFct)() = NULL;
-  void (*_paramActivationFct)(int) = NULL;
 public:
   /**********************************************************************/
   /*!
@@ -52,8 +37,9 @@ public:
     @param  activation_fct function to run when widget is pressed
   */
   /**********************************************************************/
-  DisplayWidget(void(activation_fct)()) : _value(NULL)
+  DisplayWidget(void(activation_fct)(), int xPos = -1, int yPos = -1) : _value(NULL)
   {
+    setPosition(xPos, yPos);
     _activationFct = activation_fct;
     _isEditable = false;
   }
@@ -80,10 +66,11 @@ public:
     @param  incrementAmount Numeric amount by which the displayed value is changed when edited
   */
   /**********************************************************************/
-  DisplayWidget(void *displayedValue, unsigned int incrementAmount, int valueCeiling, int valueFloor)
+  DisplayWidget(void *displayedValue, unsigned int incrementAmount, int valueCeiling, int valueFloor = 0, int xPos = -1, int yPos = -1)
       : _value(displayedValue), _incrementSize(incrementAmount),
         _valueCeiling(valueCeiling), _valueFloor(valueFloor)
   {
+    setPosition(xPos, yPos);
     _isEditable = true;
   }
 
@@ -110,6 +97,35 @@ public:
     if (*(int*)_value < _valueFloor)
       *(int*)_value = _valueCeiling;
   }
+
+  void setPosition(int xPos, int yPos) {
+    if ((xPos < 0) || (yPos < 0)) {
+      return;
+    }
+    _xPos = xPos;
+    _yPos = yPos;
+  }
+
+  int getXPostion() {return _xPos; }
+  int getYPostion() {return _yPos; }
+
+private:
+  // widget position on the display
+  int _xPos = -1;
+  int _yPos = -1;
+
+  // widgets that store a changeable value
+  void *const _value; //  You can not store a function pointer in a void * pointer. This causes UB.
+  unsigned int _incrementSize;
+  int _valueCeiling;
+  int _valueFloor;
+
+  // widgets that trigger an action
+  bool _isEditable = 0;
+  int _activationParam = 0;
+  void (*_activationFct)() = NULL;   // Will need to have a single fct pointer for any parameters/return
+  void (*_paramActivationFct)(int) = NULL;
+  
 };
 
 #endif

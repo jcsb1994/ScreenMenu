@@ -83,6 +83,22 @@ uint16_t DisplayMenu::getPrintColor()
   return getWidgetColor(_currWdgToPrint);
 }
 
+int DisplayMenu::getPrintX() 
+{
+  if (_menuWidgets == NULL) {
+    return -1;
+  }
+  return _menuWidgets[_currWdgToPrint].getXPostion();
+}
+
+int DisplayMenu::getPrintY() 
+{
+  if (_menuWidgets == NULL) {
+    return -1;
+  }
+  return _menuWidgets[_currWdgToPrint].getYPostion();
+}
+
 uint16_t DisplayMenu::getTargetWidgetColor() 
 {
   return getWidgetColor(_targetIdx);
@@ -116,7 +132,7 @@ void DisplayMenu::moveUp(int amount /* = 1 */)
   {
     _menuWidgets[_targetIdx].increment();
   }
-  else
+  else if (!_isEditingTarget)
   {
     _moveCursor(Y_COORD_INDEX, -amount);
   }
@@ -131,7 +147,7 @@ void DisplayMenu::moveDown(int amount /* = 1 */)
   {
     _menuWidgets[_targetIdx].decrement();
   }
-  else
+  else if (!_isEditingTarget)
   {
     _moveCursor(Y_COORD_INDEX, amount);
   }
@@ -146,7 +162,7 @@ void DisplayMenu::moveLeft(int amount /* = 1 */)
   {
     _menuWidgets[_targetIdx].decrement();
   }
-  else
+  else if (!_isEditingTarget)
   {
     _moveCursor(X_COORD_INDEX, -amount);
   }
@@ -161,7 +177,7 @@ void DisplayMenu::moveRight(int amount /* = 1 */)
   {
     _menuWidgets[_targetIdx].increment();
   }
-  else
+  else if (!_isEditingTarget)
   {
     _moveCursor(X_COORD_INDEX, amount);
   }
@@ -170,7 +186,7 @@ void DisplayMenu::moveRight(int amount /* = 1 */)
 void DisplayMenu::interact()
 {
   if (_menuWidgets == NULL)
-    return;
+    return; 
 
   _isChanged = true;
   if (_menuWidgets[_targetIdx].is_editable())
