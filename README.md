@@ -24,10 +24,10 @@ A widget can be used to modify values, or to call a function when pressed. This 
 The DisplayMenu file offers the principal functionality of this library. The menu object follows the user's navigation and triggers widget effects.
 
 #### Workflow
--DisplayMenu object creation
--DisplayWidget objects array creation (for each different display page)
--Set the desired colors that the menu should use to print widgets when selected or not
--Set one widget array as the current displayed widgets
--Tell the menu when the user has pressed a key, will determine which widget is now selected automatically
--Print the page on screen using the menu widget color map to color the selected widget accordingly
+- DisplayMenu object creation
+- DisplayWidget objects array creation (for each different display page)
+- Set the desired colors that the menu should use to print widgets when selected or not
+- Set one widget array as the current displayed widgets
+- Tell the menu when the user has pressed a key, will determine which widget is now selected automatically
+- Print the page on screen using the menu widget color map to color the selected widget accordingly
 
