@@ -88,7 +88,10 @@
 #define WDG4_X_POS  RIGHT_QUARTER_X_PIX
 #define WDG4_Y_POS  BOTTOM_QUARTER_Y_PIX
 
-#define WDG_TEXT_TO_SQUARE_OFFSET (55)  // print numbers approximately in the center of their squares
+// Dimensions
+#define WDG_SQUARE_LEN  (ST7789_X_PIXEL_NB/2 -1)  // squares are half the screen -1 so they do not overlap
+#define WDG_TEXT_TO_SQUARE_OFFSET (WDG_SQUARE_LEN/2)  // print numbers approximately in the center of their squares
+
 // Global objects
 
 DisplayMenu menu;
@@ -118,10 +121,10 @@ void passToPrintNextWidget(bool isFirstWidget) {
     menu.startPrint();
   } else {
     menu.nextPrint(); // called to tell the menu that we are printing the next widget
-  }
+  } 
   tft.setTextColor(menu.getPrintColor(), menu.getBackgroundColor());
   tft.setCursor(menu.getPrintX() + WDG_TEXT_TO_SQUARE_OFFSET, menu.getPrintY() + WDG_TEXT_TO_SQUARE_OFFSET);
-  tft.drawRect(menu.getPrintX(), menu.getPrintY(), ST7789_X_PIXEL_NB/2, ST7789_Y_PIXEL_NB/2, menu.getPrintColor());
+  tft.drawRect(menu.getPrintX(), menu.getPrintY(), WDG_SQUARE_LEN, WDG_SQUARE_LEN, menu.getPrintColor());
 }
 
 void printNumbersPage()
@@ -189,6 +192,8 @@ void loop()
   {
     menu.moveRight();
   }
+
+  delay(50); // artificially slow button response
 
   // reprint menu page if it needs to be updated
   if (menu.isChanged())
